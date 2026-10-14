@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คลังข้อสอบครบทุกหัวข้อย่อย ซอฟต์แวร์ประยุกต์ (บทที่ 8 - 11)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Kanit', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-indigo-700 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl">🎓</span>
+                <h1 class="text-base md:text-xl font-bold">Software Engineering Comprehensive Quiz (80 ข้อ)</h1>
+            </div>
+            <div id="timer-box" class="hidden bg-indigo-900 px-3 py-1 rounded-full text-xs md:text-sm font-semibold flex items-center gap-1">
+                ⏱️ <span id="time-display">90:00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="bg-white rounded-2xl shadow-xl p-6 md:p-10 text-center border border-slate-200">
+            <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
+                📑
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">ชุดแบบทดสอบวัดความรู้ครบทุกหัวข้อย่อย</h2>
+            <p class="text-slate-600 mb-6 max-w-xl mx-auto text-sm md:text-base">
+                ข้อสอบรวบรวมเนื้อหาเชิงลึกจากบทที่ 8 - 11 รวมทั้งสิ้น <strong>80 ข้อ</strong> โดยมีระบบสุ่มลำดับข้อสอบ สุ่มตัวเลือก พร้อมเฉลยละเอียดและวิเคราะห์คะแนนทันทีเมื่อส่งข้อสอบ
+            </p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8 text-left max-w-3xl mx-auto text-xs md:text-sm">
+                <div class="bg-indigo-50 p-3.5 rounded-xl border border-indigo-100">
+                    <span class="font-bold text-indigo-700 block mb-1">บทที่ 8 (25 ข้อ)</span>
+                    การออกแบบเชิงสถาปัตยกรรม, 8 Architectural Styles, Cohesion 7 ระดับ, Coupling 5 ระดับ
+                </div>
+                <div class="bg-emerald-50 p-3.5 rounded-xl border border-emerald-100">
+                    <span class="font-bold text-emerald-700 block mb-1">บทที่ 9 (20 ข้อ)</span>
+                    HCI, User Analysis, GOMS, Mandel/Shneiderman Rules, Control Elements ทั้งหมด, Usability
+                </div>
+                <div class="bg-amber-50 p-3.5 rounded-xl border border-amber-100">
+                    <span class="font-bold text-amber-700 block mb-1">บทที่ 10 (20 ข้อ)</span>
+                    V&V, Defect/Failure, White vs Black-Box, EP/BVA, Unit/Integration/System Testing
+                </div>
+                <div class="bg-rose-50 p-3.5 rounded-xl border border-rose-100">
+                    <span class="font-bold text-rose-700 block mb-1">บทที่ 11 (15 ข้อ)</span>
+                    CMMI 5 ระดับ, ISO/IEC 29110 (VSEs), PM Process 4 กิจกรรม, SI Process 6 กิจกรรม
+                </div>
+            </div>
+
+            <button onclick="startQuiz()" class="w-full md:w-auto px-10 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 transition-all text-lg">
+                🚀 เริ่มทำแบบทดสอบ (80 ข้อ)
+            </button>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="hidden">
+            <!-- Progress Bar -->
+            <div class="bg-white rounded-xl shadow-sm p-4 mb-6 border border-slate-200">
+                <div class="flex justify-between items-center text-sm font-medium text-slate-600 mb-2">
+                    <span id="subtopic-tag" class="text-xs text-indigo-600 font-bold uppercase">หัวข้อบทเรียน</span>
+                    <span id="progress-text">ข้อที่ 1 / 80</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 1.25%"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-slate-200 mb-6">
+                <div class="inline-block bg-indigo-100 text-indigo-800 font-semibold px-3 py-1 rounded-md text-xs mb-3" id="chapter-tag">
+                    บทที่ 8
+                </div>
+                <h3 id="question-text" class="text-base md:text-lg font-bold text-slate-800 mb-6 leading-relaxed">
+                    คำถามจะแสดงที่นี่...
+                </h3>
+
+                <!-- Options -->
+                <div id="options-container" class="space-y-3">
+                    <!-- Dynamic Options -->
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between items-center gap-4">
+                <button id="prev-btn" onclick="prevQuestion()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    ⬅️ ข้อก่อนหน้า
+                </button>
+                <button id="next-btn" onclick="nextQuestion()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition shadow-md">
+                    ข้อถัดไป ➡️
+                </button>
+                <button id="submit-btn" onclick="confirmSubmit()" class="hidden px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition shadow-md">
+                    ✅ ส่งข้อสอบ
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden">
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10 border border-slate-200 text-center mb-8">
+                <div id="result-badge" class="w-24 h-24 rounded-full flex items-center justify-center text-4xl mx-auto mb-4 bg-emerald-100 text-emerald-600">
+                    🏆
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-1">สรุปผลการทำแบบทดสอบ</h2>
+                <p id="grade-text" class="text-slate-500 mb-6 font-medium">คะแนนของคุณจากเนื้อหาทั้งหมด 4 บท</p>
+                
+                <div class="flex justify-center items-baseline gap-2 mb-6">
+                    <span id="final-score" class="text-5xl md:text-6xl font-black text-indigo-600">0</span>
+                    <span class="text-2xl font-bold text-slate-400">/ 80</span>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-lg mx-auto mb-8 text-center text-sm">
+                    <div class="bg-slate-50 p-3 rounded-xl border">
+                        <span class="text-slate-400 block text-xs">คิดเป็น</span>
+                        <span id="percentage-text" class="text-lg font-bold text-slate-700">0%</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border">
+                        <span class="text-slate-400 block text-xs">เวลาที่ใช้</span>
+                        <span id="time-used-text" class="text-lg font-bold text-slate-700">00:00</span>
+                    </div>
+                    <div class="bg-slate-50 p-3 rounded-xl border col-span-2 md:col-span-1">
+                        <span class="text-slate-400 block text-xs">ผลการประเมิน</span>
+                        <span id="eval-text" class="text-lg font-bold text-emerald-600">ผ่านเกณฑ์</span>
+                    </div>
+                </div>
+
+                <button onclick="location.reload()" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-200 transition-all">
+                    🔄 ทำแบบทดสอบอีกครั้ง
+                </button>
+            </div>
+
+            <!-- Detailed Review Header -->
+            <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                📖 เฉลยและคำอธิบายโดยละเอียด (80 ข้อ)
+            </h3>
+            <div id="review-container" class="space-y-4">
+                <!-- Dynamic Review Cards -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- JavaScript Data and Logic -->
+    <script>
+        // Comprehensive 80 Questions Data Source Covering All Subtopics
+        const rawQuestions = [
+            // ==================== CHAPTER 8 (25 QUESTIONS) ====================
+            { ch: "บทที่ 8", sub: "บทนำการออกแบบ", q: "1. บุคคลใดรับผิดชอบหลักในการกำหนดโครงสร้างและสถาปัตยกรรมระดับสูงของระบบซอฟต์แวร์?", choices: ["Programmer", "Software Architect", "System Analyst", "Software Tester"], ans: 1, exp: "Software Architect มีหน้าที่หลักในการออกแบบสถาปัตยกรรมเชิงสถาปัตยกรรม (Architectural Design)" },
+            { ch: "บทที่ 8", sub: "บทนำการออกแบบ", q: "2. การออกแบบเชิงสถาปัตยกรรม (Architectural Design / High-Level Design) มุ่งเน้นสร้างขึ้นเพื่อตอบสนองต่อสิ่งใดเป็นหลัก?", choices: ["Functional Requirements", "Non-Functional Requirements", "User Interface Requirements", "Database Schema"], ans: 1, exp: "High-Level Design ตอบสนองต่อความต้องการที่ไม่เป็นฟังก์ชัน (NFRs) เช่น ประสิทธิภาพ ความปลอดภัย การขยายระบบ" },
+            { ch: "บทที่ 8", sub: "บทนำการออกแบบ", q: "3. การออกแบบเชิงละเอียด (Detailed Design) ถูกจัดทำขึ้นเพื่อประโยชน์สูงสุดแก่บุคคลกลุ่มใด?", choices: ["Project Manager", "End User", "Programmer / Developer", "UX/UI Designer"], ans: 2, exp: "Detailed Design ออกแบบมอดูลและฟังก์ชันย่อย เพื่อให้นักเขียนโปรแกรม (Programmer) นำไปแปลงเป็นโค้ดได้ตรงตามเป้าหมาย" },
+            { ch: "บทที่ 8", sub: "Architectural Styles", q: "4. Architectural Style แบบใดที่ส่งข้อมูลผ่านท่อเพื่อส่งต่อไปยังตัวกรองข้อมูลทีละลำดับขั้น?", choices: ["Call and Return", "Client/Server", "Pipe and Filters", "Layered Architecture"], ans: 2, exp: "Pipe and Filters ใช้ Pipe เป็นท่อส่งข้อมูล และ Filter เป็นตัวกรองหรือแปลงรูปข้อมูลทีละขั้นตอน" },
+            { ch: "บทที่ 8", sub: "Architectural Styles", q: "5. โครงสร้างควบคุมแบบลำดับชั้นจากบนลงล่าง โดย Main Program คอยเรียกใช้งาน Subprogram ตรงกับรูปแบบใด?", choices: ["Pipe and Filters", "Call and Return", "Model-View-Controller", "Multi-Tier"], ans: 1, exp: "Call and Return เป็นสถาปัตยกรรมพื้นฐานแบบสั่งการลำดับชั้นโปรแกรมหลักเรียกโปรแกรมย่อย" },
+            { ch: "บทที่ 8", sub: "Architectural Styles", q: "6. หลักการปฏิสัมพันธ์พื้นฐานของสถาปัตยกรรม Client/Server คือข้อใด?", choices: ["Client และ Server ประมวลผลพร้อมกัน", "Client ส่ง Request และ Server ประมวลผลส่ง Response กลับ", "Server ร้องขอข้อมูลจาก Client เท่านั้น", "Client จัดการ DB แทน Server"], ans: 1, exp: "Client ส่งคำร้องขอ (Request) และ Server ประมวลผลก่อนส่งผลลัพธ์ตอบกลับ (Response)" },
+            { ch: "บทที่ 8", sub: "Architectural Styles", q: "7. ในรูปแบบ MVC (Model-View-Controller) ส่วนใดทำหน้าที่จัดการตรรกะทางธุรกิจ (Business Logic) และข้อมูล?", choices: ["View", "Controller", "Model", "Router"], ans: 2, exp: "Model ทำหน้าที่จัดการข้อมูล นโยบาย และตรรกะทางธุรกิจ (Business Logic)" },
+            { ch: "บทที่ 8", sub: "Architectural Styles", q: "8. ในรูปแบบ MVC ส่วนใดทำหน้าที่รับคำสั่งการปฏิสัมพันธ์จากผู้ใช้ แล้วส่งต่อไปยังส่วนอื่นๆ?", choices: ["Model", "View", "Controller", "Database"], ans: 2, exp: "Controller ทำหน้าที่เป็นตัวรับคำสั่ง ประสานงาน และควบคุมทิศทางการทำงานระหว่าง Model และ View" },
+            { ch: "บทที่ 8", sub: "Architectural Styles", q: "9. การจัดโครงสร้างระบบเป็นชั้นๆ เช่น Kernel -> OS API -> Java API จัดอยู่ในรูปแบบสถาปัตยกรรมใด?", choices: ["Layered Architecture", "Monolithic Architecture", "Serverless Architecture", "Pipe and Filters"], ans: 0, exp: "Layered Architecture คือการจัดโครงสร้างแบบลำดับชั้น โดยชั้นบนเรียกใช้บริการของชั้นที่อยู่ล่างถัดไป" },
+            { ch: "บทที่ 8", sub: "Architectural Styles", q: "10. ข้อใดคือลักษณะเด่นของการเชื่อมต่อแบบ Two-Tier Architecture?", choices: ["มี Application Server กั้นกลาง", "Client เข้าถึง Data Source / Database โดยตรง", "ประมวลผลบน Cloud FaaS", "แบ่งเป็น 3 เลเยอร์ชัดเจน"], ans: 1, exp: "Two-Tier คือส่วนแสดงผล/ประมวลผลของ Client สื่อสารและเข้าถึงฐานข้อมูลโดยตรง" },
+            { ch: "บทที่ 8", sub: "Architectural Styles", q: "11. Three-Tier หรือ n-Tier Architecture แบ่งชั้นการทำงานออกเป็น 3 ส่วนหลักในข้อใด?", choices: ["Input, Processing, Output", "Presentation Layer, Application/Business Layer, Database Layer", "Model, View, Controller", "Client, Pipe, Server"], ans: 1, exp: "Three-Tier แบ่งเป็น Presentation (ส่วนหน้า), Application/Business (ส่วนตรรกะ), และ Database (ส่วนข้อมูล)" },
+            { ch: "บทที่ 8", sub: "Architectural Styles", q: "12. ข้อเสียหลักของสถาปัตยกรรมแบบ Monolithic คือข้อใด?", choices: ["พัฒนายากในสัปดาห์แรก", "ขยายระบบเฉพาะส่วน (Scalability) ทำได้ยาก เนื่องจากผูกติดกันในโปรเซสเดียว", "ต้องเช่า Cloud เท่านั้น", "ไม่รองรับ SQL"], ans: 1, exp: "Monolithic รวมโค้ดทุกส่วนไว้โปรเซสเดียว ทำให้การสเกลเฉพาะจุดทำได้ยาก ต้องสเกลระบบทั้งหมดพร้อมกัน" },
+            { ch: "บทที่ 8", sub: "Architectural Styles", q: "13. ข้อใดคือคุณลักษณะสำคัญของ Serverless Architecture (FaaS)?", choices: ["ไม่มีเซิร์ฟเวอร์ฮาร์ดแวร์จริงในโลก", "ผู้ใช้ต้องลง OS เอง", "คิดค่าบริการแบบ Pay-per-use ตามระยะเวลาประมวลผลจริง", "ไม่รองรับ API"], ans: 2, exp: "Serverless คลาวด์ดูแลการรันฮาร์ดแวร์ให้ คิดค่าบริการตามเวลาที่รันฟังก์ชันจริง (Pay-per-use)" },
+            { ch: "บทที่ 8", sub: "Module Design", q: "14. หลักการออกแบบมอดูลซอฟต์แวร์ที่ดี (Modularity) ควรมีลักษณะอย่างไร?", choices: ["Low Cohesion & High Coupling", "High Cohesion & Low Coupling", "High Cohesion & High Coupling", "Low Cohesion & Low Coupling"], ans: 1, exp: "เป้าหมายหลักคือ High Cohesion (ภายในเกาะกลุ่มแน่น) และ Low Coupling (ระหว่างมอดูลพึ่งพากันต่ำ)" },
+            { ch: "บทที่ 8", sub: "Cohesion", q: "15. Cohesion ระดับใดถือว่ามีคุณภาพสูงที่สุดและดีที่สุด (Highest Cohesion)?", choices: ["Coincidental Cohesion", "Sequential Cohesion", "Functional Cohesion", "Communicational Cohesion"], ans: 2, exp: "Functional Cohesion ดีที่สุด เนื่องจากองค์ประกอบภายในมอดูลมุ่งทำหน้าที่เพียงงานเดียว" },
+            { ch: "บทที่ 8", sub: "Cohesion", q: "16. หากมอดูลหนึ่งนำเอา Output จากกิจกรรมแรกส่งต่อไปเป็น Input ให้กิจกรรมถัดไป จัดเป็น Cohesion แบบใด?", choices: ["Procedural Cohesion", "Sequential Cohesion", "Temporal Cohesion", "Logical Cohesion"], ans: 1, exp: "Sequential Cohesion เกิดจากกิจกรรมในมอดูลที่มีการส่งต่อผลลัพธ์เป็นทอดๆ" },
+            { ch: "บทที่ 8", sub: "Cohesion", q: "17. การรวมกิจกรรมหลายอย่างที่ทำงานกับชุดข้อมูล (Data) เดียวกันไว้ในมอดูลเดียวกัน จัดเป็น Cohesion ระดับใด?", choices: ["Communicational Cohesion", "Temporal Cohesion", "Procedural Cohesion", "Logical Cohesion"], ans: 0, exp: "Communicational Cohesion คือมอดูลที่มีหลายกิจกรรม แต่ทั้งหมดทำงานบนโครงสร้างข้อมูลชุดเดียวกัน" },
+            { ch: "บทที่ 8", sub: "Cohesion", q: "18. มอดูลที่รวมฟังก์ชันการทำงานที่สัมพันธ์กับเงื่อนไขเรื่อง 'เวลา' (เช่น การทำงานรวบรวมข้อมูล ณ สิ้นวัน) เป็น Cohesion แบบใด?", choices: ["Temporal Cohesion", "Logical Cohesion", "Coincidental Cohesion", "Procedural Cohesion"], ans: 0, exp: "Temporal Cohesion รวมกิจกรรมทำร่วมกันเนื่องจากถึงกรอบเวลาเดียวกัน" },
+            { ch: "บทที่ 8", sub: "Cohesion", q: "19. การรวมฟังก์ชันที่ทำหน้าที่ลักษณะคล้ายกันไว้ในมอดูล แล้วเลือกทำฟังก์ชันใดฟังก์ชันหนึ่งตามเงื่อนไข จัดเป็น Cohesion แบบใด?", choices: ["Logical Cohesion", "Coincidental Cohesion", "Functional Cohesion", "Sequential Cohesion"], ans: 0, exp: "Logical Cohesion รวมหน้าที่คล้ายกันไว้ แล้วใช้พารามิเตอร์เลือกตรรกะที่จะรัน" },
+            { ch: "บทที่ 8", sub: "Cohesion", q: "20. Cohesion ระดับใดที่มีคุณภาพแย่ที่สุด (Lowest Cohesion)?", choices: ["Logical Cohesion", "Temporal Cohesion", "Coincidental Cohesion", "Procedural Cohesion"], ans: 2, exp: "Coincidental Cohesion แย่ที่สุด เพราะรวมกิจกรรมเข้าด้วยกันโดยบังเอิญ ไร้ตรรกะเกี่ยวข้องกัน" },
+            { ch: "บทที่ 8", sub: "Coupling", q: "21. Coupling ระดับใดที่มีคุณภาพดีที่สุด (พึ่งพากันน้อยที่สุด / Loosely Coupled)?", choices: ["Data Coupling", "Stamp Coupling", "Control Coupling", "Common Coupling"], ans: 0, exp: "Data Coupling ดีที่สุด เพราะส่งผ่านเฉพาะค่าข้อมูลพื้นฐานเดี่ยว ไร้โครงสร้าง" },
+            { ch: "บทที่ 8", sub: "Coupling", q: "22. การส่งผ่านข้อมูลระหว่างมอดูลในรูปแบบของ Object หรือ Struct/Record ทั้งชุด จัดเป็น Coupling ระดับใด?", choices: ["Data Coupling", "Stamp Coupling", "Control Coupling", "Common Coupling"], ans: 1, exp: "Stamp Coupling คือการส่งผ่านโครงสร้างข้อมูลซับซ้อน (Composite Data Structure/Record/Object)" },
+            { ch: "บทที่ 8", sub: "Coupling", q: "23. หากมอดูล A ส่งค่า Flag หรือสัญญาณเพื่อสั่งการเลือกสาขาการทำงานในมอดูล B จัดเป็น Coupling แบบใด?", choices: ["Data Coupling", "Control Coupling", "Common Coupling", "Content Coupling"], ans: 1, exp: "Control Coupling มีการส่งค่าควบคุมหรือ Flag ไปเปลี่ยนทิศทางตรรกะของมอดูลปลายทาง" },
+            { ch: "บทที่ 8", sub: "Coupling", q: "24. หากหลายมอดูลเข้าถึงและแก้ไขค่าใน Global Variable หรือพื้นที่ข้อมูลส่วนกลางร่วมกัน จัดเป็น Coupling แบบใด?", choices: ["Stamp Coupling", "Common Coupling", "Content Coupling", "Control Coupling"], ans: 1, exp: "Common Coupling เกิดจากการแชร์ข้อมูลส่วนกลาง (Global Data Area / Global Variable) ร่วมกัน" },
+            { ch: "บทที่ 8", sub: "Coupling", q: "25. Coupling ระดับใดที่รุนแรงและแย่ที่สุด (Tightly Coupled) ซึ่งควรหลีกเลี่ยงในการออกแบบ?", choices: ["Common Coupling", "Content Coupling", "Control Coupling", "Stamp Coupling"], ans: 1, exp: "Content Coupling แย่ที่สุด เกิดจากมอดูลหนึ่งเข้าไปแก้ไขหรืออ้างอิงโค้ด/ข้อมูลภายในมอดูลอื่นตรงๆ" },
+
+            // ==================== CHAPTER 9 (20 QUESTIONS) ====================
+            { ch: "บทที่ 9", sub: "บทนำ UI", q: "26. ส่วนต่อประสานผู้ใช้ (User Interface) ทำหน้าที่เป็นตัวกลางปฏิสัมพันธ์ประกอบด้วย 3 ส่วนหลักในข้อใด?", choices: ["Harddisk, RAM, CPU", "Input, Processing, Output", "Requirement, Design, Testing", "Model, View, Controller"], ans: 1, exp: " UI ประกอบด้วยส่วนนำเข้าข้อมูล (Input), ส่วนประมวลผล (Processing), และส่วนส่งออกแสดงผล (Output)" },
+            { ch: "บทที่ 9", sub: "บทนำ UI", q: "27. ศาสตร์ HCI (Human Computer Interaction) มุ่งเน้นการศึกษาในเรื่องใดเป็นหลัก?", choices: ["การเขียนอัลกอริทึมให้ประมวลผลเร็วที่สุด", "การปฏิสัมพันธ์ระหว่างมนุษย์กับคอมพิวเตอร์และหน้าจอ", "การออกแบบโครงสร้างฐานข้อมูล", "การสร้างวงจรฮาร์ดแวร์"], ans: 1, exp: "HCI ศึกษาความสัมพันธ์และการปฏิสัมพันธ์ระหว่างมนุษย์กับระบบคอมพิวเตอร์" },
+            { ch: "บทที่ 9", sub: "User Analysis", q: "28. ผู้ใช้กลุ่ม Novice User ตามหลัก User Analysis ต้องการหน้าจอ UI ที่มีลักษณะอย่างไร?", choices: ["เน้นปุ่มทางลัด (Shortcuts) ซับซ้อน", "เน้นความเรียบง่าย มีคำอธิบายขั้นตอนชัดเจน เรียนรู้ง่าย", "ไม่มีข้อความช่วยเหลือ", "ใช้คำสั่ง Command Line"], ans: 1, exp: "Novice User (ผู้ใช้มือใหม่) ต้องการความง่าย มีคู่มือหรือคำแนะนำชัดเจน ไม่ซับซ้อน" },
+            { ch: "บทที่ 9", sub: "User Analysis", q: "29. ผู้ใช้กลุ่ม Frequent User / Expert ต้องการเน้นปัจจัยใดในการใช้งาน UI?", choices: ["ข้อความคำเตือนละเอียดทุกขั้นตอน", "ความรวดเร็วในการทำงาน และปุ่มทางลัด (Shortcuts)", "ฟอนต์ขนาดใหญ่พิเศษ", "รูปภาพประกอบจำนวนมาก"], ans: 1, exp: "ผู้เชี่ยวชาญชำนาญระบบแล้ว จึงต้องการความรวดเร็ว ลดขั้นตอน และใช้ปุ่มทางลัด (Shortcuts)" },
+            { ch: "บทที่ 9", sub: "UI Analysis", q: "30. การวิเคราะห์สภาพแวดล้อม (Environment Analysis) ใน UI Design ครอบคลุมถึงสิ่งใด?", choices: ["ข้อจำกัดทางกายภาพ (แสง เสียง) และวัฒนธรรมองค์กร", "ชนิดของ Database Server", "ความเร็วอินเทอร์เน็ตของ Server", "ภาษาโปรแกรมที่ใช้เขียน"], ans: 0, exp: "วิเคราะห์สภาพแวดล้อมทางกายภาพของผู้ใช้งานจริง เช่น เสียงรบกวน แสงสว่าง ตลอดจนวัฒนธรรมการทำงาน" },
+            { ch: "บทที่ 9", sub: "UI Models", q: "31. ภาพจำในหัวของผู้ใช้งานเกี่ยวกับรูปแบบการทำงานของระบบ เรียกว่าแบบจำลองใด?", choices: ["User Model", "Design Model", "Mental Model (System Perception)", "Implementation Model"], ans: 2, exp: "Mental Model คือความเข้าใจหรือภาพจำในหัวของผู้ใช้เกี่ยวกับการทำงานของระบบ" },
+            { ch: "บทที่ 9", sub: "UI Theories", q: "32. ข้อใด *ไม่ใช่* องค์ประกอบของแบบจำลอง GOMS?", choices: ["Goals", "Operators", "Methods", "System Requirements"], ans: 3, exp: "GOMS ย่อมาจาก Goals, Operators, Methods, และ Selection rules" },
+            { ch: "บทที่ 9", sub: "UI Rules", q: "33. ตามกฎของ Theo Mandel การทำระบบสอดคล้องกับพฤติกรรมผู้ใช้และมีปุ่ม Undo/Redo จัดอยู่ในกฎใด?", choices: ["ให้ผู้ใช้เป็นผู้ควบคุมระบบ (User Controls Interface)", "ลดภาระการจดจำของผู้ใช้", "สร้าง Interface ให้สอดคล้องกัน", "การเพิ่มความเร็วประมวลผล"], ans: 0, exp: "การให้ผู้ใช้ป้อนข้อมูลและสามารถ Undo/Redo ได้อิสระ สนับสนุนกฎ 'ผู้ใช้เป็นผู้ควบคุมระบบ'" },
+            { ch: "บทที่ 9", sub: "UI Rules", q: "34. การกำหนดค่าเริ่มต้น (Default Value) บนฟอร์ม ช่วยตอบสนองกฎข้อใดของ Theo Mandel?", choices: ["User Controls Interface", "Reduce the User's Memory Load", "Make Interface Consistent", "Visual Hierarchy"], ans: 1, exp: "Default Value ช่วยลดภาระในการจำหรือการพิมพ์ข้อมูลซ้ำซ้อนของผู้ใช้" },
+            { ch: "บทที่ 9", sub: "UI Rules", q: "35. ข้อใดตรงกับกฎ 8 ข้อของ Shneiderman & Plaisantในการออกแบบ UI?", choices: ["เน้นความสอดคล้อง (Consistency) และมี Keyboard Shortcuts", "ห้ามมีปุ่ม Undo", "ใช้สีต่างกันในทุกๆ หน้าจอ", "ไม่ต้องมีระบบ Feedback"], ans: 0, exp: "กฎของ Shneiderman เน้น Consistency, Shortcuts, Informative Feedback, การจัดการ Error, Undo ฯลฯ" },
+            { ch: "บทที่ 9", sub: "Prototyping", q: "36. การสร้าง Wireframe บนกระดาษหรือภาพร่างอย่างง่าย จัดเป็น Prototyping รูปแบบใด?", choices: ["High Fidelity Prototype", "Low Fidelity Prototype", "Interactive Prototype", "Final Release"], ans: 1, exp: "Low Fidelity Prototype เป็นต้นแบบความละเอียดต่ำ ต้นทุนต่ำ สร้างและแก้ไขได้รวดเร็ว" },
+            { ch: "บทที่ 9", sub: "Prototyping", q: "37. การใช้โปรแกรม เช่น Figma หรือ Adobe XD สร้างหน้าจอโต้ตอบเสมือนจริง จัดเป็น Prototyping แบบใด?", choices: ["Low Fidelity Prototype", "High Fidelity Prototype", "Paper Prototype", "Static Prototype"], ans: 1, exp: "High Fidelity Prototype เป็นต้นแบบความละเอียดสูง มีความเสมือนจริงทั้งดีไซน์และการโต้ตอบ" },
+            { ch: "บทที่ 9", sub: "Control Elements", q: "38. หากต้องการให้ผู้ใช้ป้อนข้อความสั้นๆ เช่น ชื่อ-นามสกุล ควรใช้ Graphical Control Element ใด?", choices: ["Textbox", "Checkbox", "Radio Button", "Slider"], ans: 0, exp: "Textbox ใช้สำหรับรับข้อมูลข้อความตัวอักษรหรือตัวเลขจากผู้ใช้" },
+            { ch: "บทที่ 9", sub: "Control Elements", q: "39. Control Element ประเภทใดที่บังคับให้ผู้ใช้เลือกตัวเลือกได้เพียงตัวเลือกเดียวจากกลุ่มตัวเลือก?", choices: ["Checkbox", "Radio Button (Option Button)", "Combo Box", "List Box"], ans: 1, exp: "Radio Button อนุญาตให้เลือกได้เพียง 1 รายการเท่านั้นจากตัวเลือกในกลุ่มเดียวกัน" },
+            { ch: "บทที่ 9", sub: "Control Elements", q: "40. หากต้องการให้ผู้ใช้เลือกท็อปปิ้งไอศกรีมได้มากกว่า 1 อย่าง ควรเลือกใช้ Control Element ใด?", choices: ["Radio Button", "Checkbox", "Textbox", "Spinner"], ans: 1, exp: "Checkbox สามารถติ๊กเลือกได้พร้อมกันหลายทางเลือก" },
+            { ch: "บทที่ 9", sub: "Control Elements", q: "41. Control Element ที่แสดงรายการย่อซ่อนอยู่ และจะคลี่ลงมาเมื่อคลิก เหมาะกับพื้นที่หน้าจอจำกัดคือข้อใด?", choices: ["Drop-Down List Box", "List Box", "Checkbox", "Textbox"], ans: 0, exp: "Drop-Down List Box ช่วยประหยัดพื้นที่หน้าจอ โดยจะซ่อนรายการไว้และแสดงเมื่อคลิกเลือก" },
+            { ch: "บทที่ 9", sub: "Control Elements", q: "42. Combo Box มีความแตกต่างและโดดเด่นจาก Drop-down List ทั่วไปอย่างไร?", choices: ["เลือกได้หลายตัวเลือกพร้อมกัน", "เป็นส่วนผสมระหว่าง Textbox (พิมพ์เองได้) และ Drop-down List (ดึงลงมาเลือกได้)", "ใช้เลื่อนปรับค่าตัวเลข", "เป็นปุ่มกดเปลี่ยนหน้า"], ans: 1, exp: "Combo Box ผสมความสามารถ ให้ผู้ใช้เลือกจากรายการก็ได้ หรือพิมพ์ค่าใหม่เองใน Textbox ก็ได้" },
+            { ch: "บทที่ 9", sub: "Control Elements", q: "43. Control Element ประเภท Spinner และ Slider เหมาะสำหรับการใช้งานลักษณะใด?", choices: ["การพิมพ์ข้อความหลายบรรทัด", "การปรับเพิ่ม-ลดค่าตัวเลขหรือระดับความดัง/ความสว่าง", "การเลือกตัวเลือกแบบพหุคูณ", "การแสดงกล่องข้อผิดพลาด"], ans: 1, exp: "Spinner (ปุ่มกดปรับค่าขึ้นลง) และ Slider (แถบเลื่อนปรับค่า) ใช้สำหรับการเลือกช่วงตัวเลขหรือระดับ" },
+            { ch: "บทที่ 9", sub: "Usability Testing", q: "44. ข้อใด *ไม่ใช่* ปัจจัยประเมิน Usability ของ UI?", choices: ["เวลาที่ใช้ในการเรียนรู้ (Time to learn)", "อัตราความผิดพลาด (Error rates)", "ความเร็วของการประมวลผล CPU", "ความพึงพอใจของผู้ใช้ (Subjective satisfaction)"], ans: 2, exp: "ความเร็ว CPU เป็นปัจจัยทางฮาร์ดแวร์ ไม่ใช่ปัจจัยวัด Usability ในการใช้งานของผู้ใช้" },
+            { ch: "บทที่ 9", sub: "Clean Code", q: "45. การเขียนโปรแกรมที่ดี (Clean Code) ตามหลักการออกแบบซอฟต์แวร์ควรมีลักษณะอย่างไร?", choices: ["เขียนโค้ดบรรทัดเดียวให้ยาวที่สุด", "ตั้งชื่อตัวแปรสื่อความหมาย มีการแบ่งมอดูล มี Error Handling และจัด Indent อ่านง่าย", "ไม่ต้องใส่ Comment ใดๆ เลย", "ประกาศ Global Variable จำนวนมากๆ"], ans: 1, exp: "Clean Code เน้นการตั้งชื่อสื่อความหมาย แบ่งมอดูล จัด Indent อ่านง่าย และจัดการ Error ได้ครอบคลุม" },
+
+            // ==================== CHAPTER 10 (20 QUESTIONS) ====================
+            { ch: "บทที่ 10", sub: "นิยาม V&V", q: "46. คำถาม 'Are we building the product right?' ตรงกับกระบวนการใดใน V & V Technique?", choices: ["Validation", "Verification", "Inspection", "System Audit"], ans: 1, exp: "Verification (การทวนสอบ) ตรวจสอบว่าระบบถูกสร้างขึ้นถูกต้องตามขั้นตอนและข้อกำหนดหรือไม่" },
+            { ch: "บทที่ 10", sub: "นิยาม V&V", q: "47. คำถาม 'Are we building the right product?' ตรงกับกระบวนการใด?", choices: ["Verification", "Validation", "Unit Testing", "Code Review"], ans: 1, exp: "Validation (การตรวจรับ) ตรวจสอบว่าซอฟต์แวร์ตรงตามความต้องการที่แท้จริงของผู้ใช้หรือไม่" },
+            { ch: "บทที่ 10", sub: "นิยาม Testing", q: "48. ความผิดพลาดจากการกระทำของมนุษย์ เช่น โปรแกรมเมอร์เข้าใจ Logic ผิด เรียกว่าอะไร?", choices: ["Fault", "Defect", "Error", "Failure"], ans: 2, exp: "Error คือความผิดพลาดอันเกิดจากมนุษย์ (Human Mistake)" },
+            { ch: "บทที่ 10", sub: "นิยาม Testing", q: "49. ข้อบกพร่องที่ซ่อนอยู่ในคำสั่งโค้ดอันเกิดจาก Error เรียกว่าอะไร?", choices: ["Human Mistake", "Fault / Defect / Bug", "Failure", "System Crash"], ans: 1, exp: "Fault / Defect / Bug คือจุดบกพร่องในซอร์สโค้ดที่เป็นผลมาจาก Error" },
+            { ch: "บทที่ 10", sub: "นิยาม Testing", q: "50. การที่ระบบทำงานผิดพลาด ค้าง หรือคราช (Crash) ขณะเปิดรันโปรแกรมจริง เรียกว่าอะไร?", choices: ["Error", "Defect", "Bug", "Failure"], ans: 3, exp: "Failure คือสภาพที่ระบบทำงานล้มเหลวขณะรันโปรแกรมจริง" },
+            { ch: "บทที่ 10", sub: "นิยาม Testing", q: "51. กระบวนการสืบค้นหาจุดต้นเหตุของข้อบกพร่องในโค้ดและทำการลงมือแก้ไขโค้ด เรียกว่าอะไร?", choices: ["Testing", "Debugging", "Verification", "Validation"], ans: 1, exp: "Debugging คือกระบวนการค้นหาสาเหตุของ Defect และลงมือแก้ไข" },
+            { ch: "บทที่ 10", sub: "Manual Testing", q: "52. การตรวจเช็คโค้ดบนเอกสารร่วมกับ Checklist ข้อผิดพลาดโดยไม่ต้องรันโปรแกรมเรียกว่าอะไร?", choices: ["Desk Checking", "Inspection", "Black-Box Testing", "Stress Testing"], ans: 1, exp: "Inspection เป็นเทคนิคการตรวจซอร์สโค้ดบนเอกสารด้วย Checklist โดยไม่ใช้คอมพิวเตอร์ประมวลผล" },
+            { ch: "บทที่ 10", sub: "White-Box Testing", q: "53. การทดสอบแบบกล่องขาว (White-Box Testing / Structural Testing) มีลักษณะเด่นอย่างไร?", choices: ["สนใจเฉพาะ Input และ Output ไม่ดูโค้ด", "ผู้ทดสอบต้องรู้โครงสร้างโค้ด คำสั่ง ตรรกะ และ Control Flow ภายใน", "ทำโดย End User เท่านั้น", "ใช้ทดสอบเฉพาะ UI"], ans: 1, exp: "White-Box เน้นตรวจสอบโครงสร้างภายใน คำสั่ง ตรรกะเงื่อนไข และ Control Flow ของโค้ด" },
+            { ch: "บทที่ 10", sub: "Black-Box Testing", q: "54. การทดสอบแบบกล่องดำ (Black-Box Testing / Behavioral Testing) มุ่งเน้นไปที่สิ่งใด?", choices: ["การครอบคลุมคำสั่ง Statement Coverage", "การตรวจสอบว่า Input และ Output เป็นไปตาม Requirement หรือไม่ โดยไม่สนใจโค้ดข้างใน", "การเช็คชนิดตัวแปร", "การตรวจวงจรฮาร์ดแวร์"], ans: 1, exp: "Black-Box สนใจพฤติกรรมภายนอก ป้อน Input แล้วดูผลลัพธ์ Output ว่าตรงตาม Spec หรือไม่" },
+            { ch: "บทที่ 10", sub: "Black-Box Testing", q: "55. เทคนิค Equivalence Partitioning ในการทดสอบ Black-Box มีหลักการอย่างไร?", choices: ["เลือกค่าเฉพาะขอบเขตสูงสุดต่ำสุด", "แบ่งกลุ่มข้อมูลเข้าเป็นกลุ่มที่มีผลลัพธ์เหมือนกัน แล้วสุ่มตัวแทนมาทดสอบ", "รันโค้ดทุกบรรทัด", "สุ่มป้อนข้อมูลมั่ว"], ans: 1, exp: "Equivalence Partitioning แบ่งข้อมูลเข้าเป็นชั้นๆ (Equivalence Classes) แล้วเลือกตัวแทนของกลุ่มมาทดสอบ" },
+            { ch: "บทที่ 10", sub: "Black-Box Testing", q: "56. หากระบบรับค่าคะแนน 0 ถึง 100 การเลือกค่าทดสอบเป็น -1, 0, 100, 101 จัดเป็นเทคนิคใด?", choices: ["Equivalence Partitioning", "Boundary Value Analysis (BVA)", "Loop Testing", "Branch Testing"], ans: 1, exp: "Boundary Value Analysis (BVA) เลือกทดสอบค่า ณ จุดขอบเขตต่ำสุด/สูงสุด และค่าเหลื่อมขอบเขต" },
+            { ch: "บทที่ 10", sub: "Levels of Testing", q: "57. การทดสอบชิ้นส่วนมอดูลย่อยอิสระ เพื่อตรวจเช็ค Local Data, Boundary และ Error Handling จัดเป็นระดับใด?", choices: ["Integration Testing", "System Testing", "Unit / Module Testing", "Acceptance Testing"], ans: 2, exp: "Unit Testing หรือ Module Testing เป็นการทดสอบชิ้นส่วนโค้ดหรือมอดูลย่อยที่สุดแยกเป็นอิสระ" },
+            { ch: "บทที่ 10", sub: "Levels of Testing", q: "58. การทดสอบการปฏิสัมพันธ์และการส่งต่อข้อมูลระหว่างมอดูลต่างๆ เรียกว่าอะไร?", choices: ["Unit Testing", "Integration Testing", "System Testing", "Acceptance Testing"], ans: 1, exp: "Integration Testing มุ่งเน้นทดสอบการอินทิเกรตและการรับส่งข้อมูลระหว่างมอดูล" },
+            { ch: "บทที่ 10", sub: "Levels of Testing", q: "59. ในการทดสอบ Top-down Integration หากมอดูลระดับล่างยังไม่เสร็จ ต้องสร้างสิ่งใดขึ้นมาทดแทน?", choices: ["Driver", "Stub", "Mock Server", "Main Function"], ans: 1, exp: "Top-down ทดสอบจากบนลงล่าง หากมอดูลล่างไม่เสร็จ ต้องสร้าง Stub เพื่อทำหน้าที่รับ-ส่งค่าจำลอง" },
+            { ch: "บทที่ 10", sub: "Levels of Testing", q: "60. ในการทดสอบ Bottom-up Integration หากมอดูลระดับบนยังไม่เสร็จ ต้องสร้างสิ่งใดขึ้นมาสั่งการ?", choices: ["Driver", "Stub", "Subprogram", "API Gateway"], ans: 0, exp: "Bottom-up ทดสอบจากล่างขึ้นบน หากมอดูลบนไม่เสร็จ ต้องสร้าง Driver ขึ้นมาคอยเรียกใช้งานมอดูลล่าง" },
+            { ch: "บทที่ 10", sub: "System Testing", q: "61. การทดสอบ Alpha Testing มีรูปแบบการดำเนินงานอย่างไร?", choices: ["ทดสอบโดยผู้ใช้จริง ณ สถานที่จริง นอกบริษัท", "ทดสอบโดยผู้ใช้ร่วมกับ Tester ในสภาพแวดล้อมจำลองของผู้พัฒนา", "ทดสอบการเขียนโค้ด White-box", "ทดสอบระบบเน็ตเวิร์ก"], ans: 1, exp: "Alpha Testing ทำ ณ สถานที่ของผู้พัฒนา โดยให้ผู้ใช้ร่วมทดสอบกับทีม Tester ในสภาพแวดล้อมจำลอง" },
+            { ch: "บทที่ 10", sub: "System Testing", q: "62. การทดสอบ Beta Testing มีลักษณะเด่นอย่างไร?", choices: ["ทดสอบโดยทีม Tester ภายในเท่านั้น", "ทดสอบโดยผู้ใช้จริง ในสถานที่จริง ข้อมูลจริง นอกสถานที่พัฒนา", "ทำก่อน Alpha Testing", "ใช้วัด Statement Coverage"], ans: 1, exp: "Beta Testing คือการนำซอฟต์แวร์ไปให้ผู้ใช้งานจริงทดสอบในสภาพแวดล้อมจริงนอกบริษัท" },
+            { ch: "บทที่ 10", sub: "System Testing", q: "63. การทดสอบ Stress Testing มีจุดประสงค์เพื่ออะไร?", choices: ["ทดสอบการกู้คืนระบบเมื่อไฟดับ", "ทดสอบระบบภายใต้สภาวะกดดัน ปริมาณข้อมูลหรือผู้ใช้งานที่เกินกว่าระดับปกติ", "ทดสอบความปลอดภัยรหัสผ่าน", "ทดสอบความเร็วในการเขียนโค้ด"], ans: 1, exp: "Stress Testing ป้อนโหลดหรือข้อมูลเข้าสู่ระบบเกินพิกัดปกติเพื่อดูการรับมือภายใต้สภาวะกดดัน" },
+            { ch: "บทที่ 10", sub: "System Testing", q: "64. การทดสอบ Recovery Testing มุ่งเน้นตรวจสอบเรื่องใด?", choices: ["ความสามารถในการกู้คืนระบบและข้อมูลให้กลับมาทำงานได้ตามปกติเมื่อเกิดความล้มเหลว", "ความเร็ว UI", "ความถูกต้องของการคิดภาษี", "การสแกนไวรัส"], ans: 0, exp: "Recovery Testing ประเมินความสามารถในการกู้คืนระบบ (Recovery) หลังเกิด Crash หรือ Failure" },
+            { ch: "บทที่ 10", sub: "System Testing", q: "65. การทดสอบ Regression Testing ต้องทำเมื่อใดและเพื่อจุดประสงค์ใด?", choices: ["ทำครั้งเดียวก่อนเริ่มโครงการ", "ทำซ้ำหลังแก้โค้ด เพื่อให้มั่นใจว่าการแก้ไขไม่ส่งผลกระทบให้เกิด Bug ในส่วนเดิมที่เคยทำงานได้", "ทำเฉพาะตอนออกแบบ UI", "ทำเพื่อเช็คคู่มือเอกสาร"], ans: 1, exp: "Regression Testing คือการทดสอบซ้ำหลังจากปรับแก้โค้ด เพื่อป้องกันไม่ให้กระทบการทำงานเดิม" },
+
+            // ==================== CHAPTER 11 (15 QUESTIONS) ====================
+            { ch: "บทที่ 11", sub: "CMMI", q: "66. CMMI (Capability Maturity Model Integration) เป็นแบบจำลองที่มุ่งเน้นเรื่องใด?", choices: ["การเลือกภาษาเขียนโปรแกรม", "การประเมินและปรับปรุงกระบวนการพัฒนาซอฟต์แวร์", "การออกแบบ UI หน้าจอ", "การจัดซื้อฮาร์ดแวร์"], ans: 1, exp: "CMMI เน้นการประเมิน ยกระดับ และปรับปรุงกระบวนการพัฒนาซอฟต์แวร์ขององค์กร" },
+            { ch: "บทที่ 11", sub: "CMMI Levels", q: "67. CMMI Level 1: Initial มีลักษณะกระบวนการทำงานอย่างไร?", choices: ["มีมาตรฐานจัดการเอกสารครบถ้วน", "ไม่มีมาตรฐาน ชัดเจน พึ่งพาความสามารถเฉพาะบุคคล มีความเสี่ยงสูง", "มีการวัดผลเชิงปริมาณ", "ใช้นวัตกรรมล้ำสมัย"], ans: 1, exp: "Level 1 Initial ไม่มีมาตรฐานแน่นอน คาดเดายาก พึ่งพาตัวบุคคลเป็นหลัก" },
+            { ch: "บทที่ 11", sub: "CMMI Levels", q: "68. CMMI Level 2: Repeatable เริ่มมีการจัดทำและให้ความสำคัญในเรื่องใด?", choices: ["การใช้นวัตกรรมขั้นสูง", "การบริหารจัดการโครงการ เริ่มวัดผลเรื่องต้นทุนและเวลา", "การไม่มีเอกสารควบคุม", "การเลิกใช้หัวหน้าทีม"], ans: 1, exp: "Level 2 Repeatable เริ่มมีวินัยในการบริหารจัดการโครงการ (PM) และควบคุมต้นทุน/เวลา" },
+            { ch: "บทที่ 11", sub: "CMMI Levels", q: "69. CMMI Level 3: Defined มุ่งเน้นความสำคัญในเรื่องใดเป็นหลัก?", choices: ["การวัดผลด้วยสถิติเชิงปริมาณ", "การกำหนดนิยามกระบวนการมาตรฐานและจัดการผ่านเอกสาร (Document Management)", "การทำโปรเจกต์โดยไม่ลงบันทึก", "การพึ่งพาตัวบุคคล"], ans: 1, exp: "Level 3 Defined เน้นการสร้างกระบวนการมาตรฐานทั่วทั้งองค์กรและทำ Document Management" },
+            { ch: "บทที่ 11", sub: "CMMI Levels", q: "70. CMMI Level 4: Managed มีลักษณะเด่นในเรื่องใด?", choices: ["การประเมินและวัดผลกระบวนการทำงานเชิงปริมาณ (Quantitative)", "การเริ่มต้นเขียนโค้ดสัปดาห์แรก", "การทำงานแบบไม่มีนโยบาย", "การใช้ทีมงานน้อยกว่า 5 คน"], ans: 0, exp: "Level 4 Managed ใช้การวัดผลเชิงปริมาณ (Quantitative Metrics) เพื่อควบคุมคุณภาพกระบวนการ" },
+            { ch: "บทที่ 11", sub: "CMMI Levels", q: "71. CMMI Level 5: Optimizing ซึ่งเป็นระดับสูงสุด มีเป้าหมายหลักคืออะไร?", choices: ["การเริ่มเก็บเอกสารครั้งแรก", "การปรับปรุงกระบวนการอย่างต่อเนื่อง (Continuous Improvement) ด้วยนวัตกรรม", "การยกเลิกการทดสอบซอฟต์แวร์", "การลดต้นทุนฮาร์ดแวร์"], ans: 1, exp: "Level 5 Optimizing เน้นการพัฒนาปรับปรุงกระบวนการอย่างต่อเนื่องและการใช้นวัตกรรม" },
+            { ch: "บทที่ 11", sub: "ISO/IEC 29110", q: "72. มาตรฐาน ISO/IEC 29110 ออกแบบมาเพื่อกลุ่มเป้าหมายใดโดยเฉพาะ?", choices: ["องค์กรขนาดใหญ่ที่มีพนักงานมากกว่า 500 คน", "Very Small Entities (VSEs) หรือทีมงานพัฒนาขนาดเล็กที่มีสมาชิกไม่เกิน 25 คน", "หน่วยงานรัฐบาลระดับประเทศ", "มหาวิทยาลัย"], ans: 1, exp: "ISO/IEC 29110 พัฒนาขึ้นสำหรับ VSEs (Very Small Entities) คือทีมพัฒนาซอฟต์แวร์ไม่เกิน 25 คน" },
+            { ch: "บทที่ 11", sub: "ISO/IEC 29110", q: "73. ลำดับวิวัฒนาการโครงสร้าง Profile ของ ISO/IEC 29110 เรียงจากระดับเริ่มต้นไประดับสูงได้อย่างถูกต้อง?", choices: ["Advanced -> Basic -> Entry", "Entry -> Basic -> Intermediate -> Advanced", "Basic -> Entry -> Advanced", "Level 1 -> Level 5"], ans: 1, exp: "โครงสร้าง Profile เรียงจาก Entry Profile -> Basic Profile -> Intermediate -> Advanced" },
+            { ch: "บทที่ 11", sub: "ISO/IEC 29110", q: "74. กระบวนการหลัก 2 ส่วนใน Basic Profile ของ ISO/IEC 29110 ได้แก่กระบวนการใดบ้าง?", choices: ["Risk Management & Coding Standard", "Project Management (PM) & Software Implementation (SI)", "UI Design & Testing", "QA & Maintenance"], ans: 1, exp: " Basic Profile ประกอบด้วย 2 กระบวนการหลักคือ Project Management (PM) และ Software Implementation (SI)" },
+            { ch: "บทที่ 11", sub: "ISO/IEC 29110 PM", q: "75. กระบวนการ Project Management (PM) Process ใน ISO/IEC 29110 ประกอบด้วยกี่กิจกรรมหลัก?", choices: ["2 กิจกรรม", "4 กิจกรรม (Planning, Execution, Assessment & Control, Closure)", "6 กิจกรรม", "10 กิจกรรม"], ans: 1, exp: "PM Process มี 4 กิจกรรมหลัก: Project Planning, Plan Execution, Assessment and Control, และ Project Closure" },
+            { ch: "บทที่ 11", sub: "ISO/IEC 29110 PM", q: "76. เอกสาร Correction Register ใน ISO/IEC 29110 ถูกนำมาใช้ในกิจกรรมใดของ PM Process?", choices: ["Project Planning", "Project Assessment and Control", "Project Closure", "SI Initiation"], ans: 1, exp: "Correction Register ใช้บันทึกปัญหาและข้อแก้ไขในกิจกรรม Project Assessment and Control" },
+            { ch: "บทที่ 11", sub: "ISO/IEC 29110 SI", q: "77. กระบวนการ Software Implementation (SI) Process ใน ISO/IEC 29110 มีกี่กิจกรรมหลัก?", choices: ["4 กิจกรรม", "6 กิจกรรม", "8 กิจกรรม", "12 กิจกรรม"], ans: 1, exp: "SI Process มี 6 กิจกรรมหลัก: Initiation, Requirements Analysis, Design, Construction, Integration/Tests, Delivery" },
+            { ch: "บทที่ 11", sub: "ISO/IEC 29110 SI", q: "78. กิจกรรมใด *ไม่ใช่* กิจกรรมย่อยใน Software Implementation (SI) Process?", choices: ["Software Requirements Analysis", "Software Construction", "Project Assessment and Control", "Product Delivery"], ans: 2, exp: "Project Assessment and Control เป็นกิจกรรมในฝั่ง PM Process ไม่ใช่ SI Process" },
+            { ch: "บทที่ 11", sub: "Comparison", q: "79. เมื่อเปรียบเทียบจำนวนโครงการที่ใช้ประเมินระหว่าง CMMI กับ ISO/IEC 29110 เป็นอย่างไร?", choices: ["CMMI ใช้ 1 โครงการ, ISO ใช้ 4 โครงการ", "CMMI ใช้ยื่นประเมินอย่างน้อย 4 โครงการขึ้นไป ส่วน ISO/IEC 29110 ใช้เพียงอย่างน้อย 1 โครงการ", "ใช้ 10 โครงการเท่ากัน", "ไม่ต้องใช้โครงการยื่นประเมิน"], ans: 1, exp: "CMMI ต้องใช้ยื่นประเมินอย่างน้อย 4 โครงการ ส่วน ISO/IEC 29110 ใช้เพียงอย่างน้อย 1 โครงการ" },
+            { ch: "บทที่ 11", sub: "Comparison", q: "80. ข้อใดเปรียบเทียบระยะเวลาและค่าใช้จ่ายในการประเมินมาตรฐานระหว่าง CMMI และ ISO/IEC 29110 ได้ถูกต้อง?", choices: ["CMMI ค่าใช้จ่ายต่ำกว่า ISO/IEC 29110", "ISO/IEC 29110 ใช้เวลาสั้นกว่า (ประมาณ 3 เดือน) และค่าใช้จ่ายต่ำกว่า CMMI มาก", "ใช้เวลา 2 ปีเท่ากัน", "ISO/IEC 29110 แพงกว่า CMMI"], ans: 1, exp: "ISO/IEC 29110 ออกแบบมาเพื่อทีมขนาดเล็ก จึงใช้ระยะเวลาประเมินสั้น (ประมาณ 3 เดือน) และค่าใช้จ่ายต่ำกว่า CMMI มาก" }
+        ];
+
+        // Global State Variables
+        let questions = [];
+        let currentIdx = 0;
+        let userAnswers = [];
+        let timerInterval = null;
+        let timeLeft = 5400; // 90 mins for 80 questions
+        let timeUsed = 0;
+
+        // Shuffle Helper
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        // Start Quiz Engine
+        function startQuiz() {
+            // Randomize options and questions order
+            questions = rawQuestions.map(q => {
+                let options = q.choices.map((choice, index) => ({ text: choice, isCorrect: index === q.ans }));
+                options = shuffle(options);
+                let newAnsIdx = options.findIndex(o => o.isCorrect);
+                return {
+                    ch: q.ch,
+                    sub: q.sub,
+                    q: q.q,
+                    choices: options.map(o => o.text),
+                    ans: newAnsIdx,
+                    exp: q.exp
+                };
+            });
+            questions = shuffle(questions);
+
+            userAnswers = new Array(questions.length).fill(null);
+            currentIdx = 0;
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('timer-box').classList.remove('hidden');
+
+            startTimer();
+            renderQuestion();
+        }
+
+        // Timer Logic (90 mins)
+        function startTimer() {
+            timeLeft = 5400;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timeUsed++;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("⏱️ หมดเวลาในการทำแบบทดสอบ! ระบบจะทำการส่งคำตอบให้อัตโนมัติ");
+                    submitQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            let m = Math.floor(timeLeft / 60);
+            let s = timeLeft % 60;
+            document.getElementById('time-display').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        // Render Current Question
+        function renderQuestion() {
+            const q = questions[currentIdx];
+            document.getElementById('chapter-tag').innerText = q.ch;
+            document.getElementById('subtopic-tag').innerText = `หัวข้อย่อย: ${q.sub}`;
+            document.getElementById('question-text').innerText = q.q;
+            
+            // Update Progress
+            document.getElementById('progress-text').innerText = `ข้อที่ ${currentIdx + 1} / ${questions.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
+
+            // Render Options
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.choices.forEach((choice, idx) => {
+                const isSelected = userAnswers[currentIdx] === idx;
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-xl border-2 transition-all flex items-center justify-between ${
+                    isSelected 
+                    ? 'border-indigo-600 bg-indigo-50 text-indigo-900 font-semibold shadow-sm' 
+                    : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700'
+                }`;
+                btn.onclick = () => selectOption(idx);
+
+                const optionLetters = ['ก', 'ข', 'ค', 'ง'];
+                btn.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${isSelected ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600'}">
+                            ${optionLetters[idx]}
+                        </span>
+                        <span class="text-sm md:text-base">${choice}</span>
+                    </div>
+                    ${isSelected ? '<span class="text-indigo-600 text-lg font-bold">✓</span>' : ''}
+                `;
+                container.appendChild(btn);
+            });
+
+            // Update Navigation Buttons
+            document.getElementById('prev-btn').disabled = currentIdx === 0;
+            
+            if (currentIdx === questions.length - 1) {
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('submit-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('next-btn').classList.remove('hidden');
+                document.getElementById('submit-btn').classList.add('hidden');
+            }
+        }
+
+        function selectOption(idx) {
+            userAnswers[currentIdx] = idx;
+            renderQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentIdx < questions.length - 1) {
+                currentIdx++;
+                renderQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                renderQuestion();
+            }
+        }
+
+        function confirmSubmit() {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            let msg = "คุณต้องการส่งข้อสอบใช่หรือไม่?";
+            if (unanswered > 0) {
+                msg = `คุณยังไม่ได้ตอบอีก ${unanswered} ข้อ จากทั้งหมด ${questions.length} ข้อ คุณแน่ใจหรือไม่ที่จะส่งข้อสอบ?`;
+            }
+            if (confirm(msg)) {
+                submitQuiz();
+            }
+        }
+
+        // Calculate and Show Results
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            questions.forEach((q, idx) => {
+                if (userAnswers[idx] === q.ans) {
+                    score++;
+                }
+            });
+
+            const percentage = Math.round((score / questions.length) * 100);
+            
+            // Hide Quiz, Show Results
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('timer-box').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            // Render Score Metrics
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('percentage-text').innerText = `${percentage}%`;
+            
+            let mUsed = Math.floor(timeUsed / 60);
+            let sUsed = timeUsed % 60;
+            document.getElementById('time-used-text').innerText = `${mUsed}:${sUsed.toString().padStart(2, '0')}`;
+
+            const evalText = document.getElementById('eval-text');
+            const badge = document.getElementById('result-badge');
+
+            if (percentage >= 80) {
+                evalText.innerText = "ดีเยี่ยม (Pass)";
+                evalText.className = "text-lg font-bold text-emerald-600";
+                badge.className = "w-24 h-24 rounded-full flex items-center justify-center text-4xl mx-auto mb-4 bg-emerald-100 text-emerald-600";
+                badge.innerText = "🏆";
+            } else if (percentage >= 60) {
+                evalText.innerText = "ผ่านเกณฑ์ (Pass)";
+                evalText.className = "text-lg font-bold text-indigo-600";
+                badge.className = "w-24 h-24 rounded-full flex items-center justify-center text-4xl mx-auto mb-4 bg-indigo-100 text-indigo-600";
+                badge.innerText = "🎉";
+            } else {
+                evalText.innerText = "ควรปรับปรุง (Fail)";
+                evalText.className = "text-lg font-bold text-rose-600";
+                badge.className = "w-24 h-24 rounded-full flex items-center justify-center text-4xl mx-auto mb-4 bg-rose-100 text-rose-600";
+                badge.innerText = "📚";
+            }
+
+            // Render Detailed Review Cards
+            const reviewContainer = document.getElementById('review-container');
+            reviewContainer.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.ans;
+                const optionLetters = ['ก', 'ข', 'ค', 'ง'];
+
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-xl shadow-sm p-5 border-l-4 ${isCorrect ? 'border-l-emerald-500' : 'border-l-rose-500'} border-slate-200`;
+
+                let optionsHTML = '';
+                q.choices.forEach((choice, cIdx) => {
+                    let optionClass = "bg-slate-50 text-slate-700 border-slate-200";
+                    let badgeHTML = "";
+
+                    if (cIdx === q.ans) {
+                        optionClass = "bg-emerald-50 text-emerald-800 border-emerald-300 font-semibold";
+                        badgeHTML = `<span class="text-xs bg-emerald-600 text-white px-2 py-0.5 rounded">คำตอบที่ถูกต้อง</span>`;
+                    }
+                    if (userAns === cIdx && !isCorrect) {
+                        optionClass = "bg-rose-50 text-rose-800 border-rose-300 font-semibold";
+                        badgeHTML = `<span class="text-xs bg-rose-600 text-white px-2 py-0.5 rounded">คำตอบของคุณ</span>`;
+                    }
+
+                    optionsHTML += `
+                        <div class="p-2.5 rounded-lg border text-xs md:text-sm flex justify-between items-center ${optionClass}">
+                            <span><strong>${optionLetters[cIdx]}.</strong> ${choice}</span>
+                            ${badgeHTML}
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-600">${q.ch} (${q.sub}) | ข้อที่ ${idx + 1}</span>
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-full ${isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">
+                            ${isCorrect ? '✓ ถูกต้อง' : '✗ ผิด'}
+                        </span>
+                    </div>
+                    <h4 class="font-bold text-slate-800 mb-3 text-sm md:text-base">${q.q}</h4>
+                    <div class="space-y-1.5 mb-3">
+                        ${optionsHTML}
+                    </div>
+                    <div class="bg-indigo-50/70 p-3 rounded-lg border border-indigo-100 text-xs md:text-sm text-indigo-900">
+                        <strong>💡 คำอธิบาย:</strong> ${q.exp}
+                    </div>
+                `;
+                reviewContainer.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
